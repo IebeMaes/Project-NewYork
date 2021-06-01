@@ -1,0 +1,70 @@
+<div class="container">
+    <div class="row">
+        <div class="col col-md-8" style="text-align: center;">
+            <h1>Update team</h1>
+            <form #createTeamForm="ngForm" (ngSubmit)="onSubmitUpdateTeam()" *ngIf="selectedTeam">
+                <p>
+                    <mat-form-field>
+                        <input matInput type="text" [(ngModel)]='selectedTeam["teamName"]' placeholder="teamname" name="teamname" required/>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field>
+                        <input matInput type="text" [(ngModel)]='selectedTeam["companyName"]' placeholder="companyname" name="companyname" required/>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field>
+                        <input matInput type="text" [(ngModel)]='selectedTeam["address"]' placeholder="address" name="address" required/>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field appearance="fill" *ngIf="!usersZonderTeam; else nousers">
+                        <mat-label>Captain</mat-label>
+                        <mat-select name="captain" [(ngModel)]='selectedTeam["captainID"]' required>
+                            <mat-option *ngFor="let user of usersByTeamID" [value]='user["userID"]'>
+                                {{user["firstName"]}} {{user["lastName"]}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <ng-template #nousers>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Captain</mat-label>
+                            <mat-select name="fillcaptain" [(ngModel)]='selectedUser' required>
+                                <mat-option [value]='0'>Geen kapitein of geen users zonder team</mat-option>
+                                <mat-option *ngFor="let user of usersZonderTeam" [value]='user'>
+                                    {{user["firstName"]}} {{user["lastName"]}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-template>
+                </p>
+                <button mat-raised-button color="primary" type="submit" [disabled]="!createTeamForm.form.valid || submittedSelected">Save</button>
+            </form>
+        </div>
+        <div class="col-md-4" style="text-align: center;">
+            <div>
+                <h1 style="text-align: center;">Upload nieuwe teamfoto</h1>
+                <form class="form" enctype="multipart/form-data" >
+                    <dropzone class="dropzone-container" [message]="'Click or drag a photo to upload'" [config]="config" (error)="onUploadError($event)" style="max-height:200px;height:auto;width:auto;"></dropzone>
+                </form>
+                <button class="button btn btn-danger" (click)="removeFiles()" style="margin: 2px;">Remove files</button>
+            </div>
+            
+        </div>
+    </div>
+    <div class="row mt-5" style="text-align: center;">
+        <div class="col col-md-8">
+            <h1 style="text-align: center;">Huidige teamfoto</h1>
+            <p *ngIf="teampic; else nopic">
+                <img [src]="teampic" style="max-height: 200px;">
+            </p>
+            <ng-template #nopic>
+                <p>No picture uploaded</p>
+            </ng-template>
+        </div>
+        <div class="col col-md-4" style="text-align: right;" >
+            <button mat-raised-button color="accent" (click)="backToTeams()" >Back to teams</button>
+        </div>
+    </div>
+</div>
